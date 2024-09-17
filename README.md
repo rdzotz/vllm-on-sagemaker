@@ -55,7 +55,7 @@ Now, create the SageMaker Endpoint. Choose the appropriate Hugging Face model ID
 ```sh
 python3 sagemaker/create_sagemaker_endpoint.py \
     --region "$REGION" \
-    --model_id "deepseek-ai/deepseek-llm-7b-chat" \
+    --model_id "microsoft/Phi-3.5-vision-instruct" \
     --instance_type ml.g5.4xlarge \
     --role_arn $SM_ROLE \
     --image_uri $IMG_URI \
