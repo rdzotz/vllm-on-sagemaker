@@ -16,22 +16,34 @@ TRUST_POLICY='{
 
 ROLE_NAME=SageMakerExecutionRoleTest
 
-# Create the role and capture the role ARN
-SAGEMAKER_ROLE_ARN=$(aws iam create-role --role-name $ROLE_NAME --assume-role-policy-document "$TRUST_POLICY" --query 'Role.Arn' --output text)
+# Check if the role already exists
+SAGEMAKER_ROLE_ARN=$(aws iam get-role --role-name $ROLE_NAME --query 'Role.Arn' --output text 2>/dev/null)
 
-# Attach SageMaker full access policy
+if [ -z "$SAGEMAKER_ROLE_ARN" ]; then
+    # Role does not exist; create it
+    SAGEMAKER_ROLE_ARN=$(aws iam create-role \
+        --role-name $ROLE_NAME \
+        --assume-role-policy-document "$TRUST_POLICY" \
+        --query 'Role.Arn' --output text)
+else
+    # Role exists; update the trust policy (if needed)
+    aws iam update-assume-role-policy \
+        --role-name $ROLE_NAME \
+        --policy-document "$TRUST_POLICY" >/dev/null
+fi
+
+# Attach policies (suppress output)
 aws iam attach-role-policy \
     --role-name $ROLE_NAME \
-    --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
+    --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess >/dev/null
 
-# Attach S3 read-only access policy
 aws iam attach-role-policy \
     --role-name $ROLE_NAME \
-    --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+    --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess >/dev/null
 
-# Attach ECR read-only access policy
 aws iam attach-role-policy \
     --role-name $ROLE_NAME \
-    --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+    --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly >/dev/null
 
+# Output only the Role ARN
 echo "$SAGEMAKER_ROLE_ARN"

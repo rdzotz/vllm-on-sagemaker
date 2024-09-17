@@ -88,7 +88,7 @@ payload = {
     # NOTE! The 'model' parameter is mandated by OpenAI API interface,
     # but it doesn't mean we can choose the model on the fly, the model is set
     # when creating the Sagemaker Endpoiont.
-    "model": "deepseek-ai/deepseek-llm-7b-chat",
+    "model": "microsoft/Phi-3.5-vision-instruct",
     # "stream": True,
     "messages": [
         {
@@ -128,7 +128,7 @@ spayload = {
     # NOTE! The 'model' parameter is mandated by OpenAI API interface,
     # but it doesn't mean we can choose the model on the fly, the model is set
     # when creating the Sagemaker Endpoiont.
-    "model": "deepseek-ai/deepseek-llm-7b-chat",
+    "model": "microsoft/Phi-3.5-vision-instruct",
     "stream": True,
     "messages": [
         {
